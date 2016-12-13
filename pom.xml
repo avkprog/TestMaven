@@ -17,6 +17,14 @@
     <artifactId>version</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <scm>
+        <connection>scm:git:file://localhost/C:\LocalSource\Java\TestMaven\.git</connection>
+        <developerConnection>scm:git:file://localhost/C:\LocalSource\Java\TestMaven\.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>scm:git:file://localhost/C:\LocalSource\Java\TestMaven\.git</url>
+    </scm>
+
+
     <repositories>
         <repository>
             <snapshots>
@@ -49,6 +57,7 @@
         <resources>
             <resource>
                 <directory>C:\LocalSource\Java\TestMaven\src\main\resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -118,22 +127,33 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.4</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>build-number</id>
                         <goals>
                             <goal>create</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <format>At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</format>
+                    <format>{0}</format>
                     <items>
-                        <item implementation="java.lang.Integer">7</item>
-                        <item>timestamp</item>
-                        <item>a disturbance in the Force</item>
+                        <item>buildNumber</item>
                     </items>
                     <doCheck>true</doCheck>
                     <doUpdate>true</doUpdate>
@@ -183,19 +203,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.4</version>
                 <executions>
@@ -222,7 +229,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
+        <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
 
     <reporting>
